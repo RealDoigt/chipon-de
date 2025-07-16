@@ -104,13 +104,13 @@ void main(string[] args)
             }
 
             if (hasMinLowerBound) "Dés inférieurs: $0/$1".daswriteln(inferiorCrits, dieQuantity);
-            else if (hasMinUpperBound) "Dés supérieurs: $0/$1".daswriteln(superiorCrits, dieQuantity);
+            if (hasMinUpperBound) "Dés supérieurs: $0/$1".daswriteln(superiorCrits, dieQuantity);
 
             daswriteln
             (
                 "Le résultat est un jet $0 de $1",
-                inferiorCrits / dieQuantity * 100 < 50 ?
-                superiorCrits / dieQuantity * 100 < 50 ?
+                cast(double)inferiorCrits / dieQuantity * 100 < 50 ?
+                cast(double)superiorCrits / dieQuantity * 100 < 50 ?
                 "normal" :
                 "critique supérieur" :
                 "critique inférieur",
