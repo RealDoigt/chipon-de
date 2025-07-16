@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/chipon-de
+chipon-de.so
+chipon-de.dylib
+chipon-de.dll
+chipon-de.a
+chipon-de.lib
+chipon-de-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

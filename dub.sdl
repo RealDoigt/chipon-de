@@ -1,0 +1,5 @@
+name "chipon-de"
+description "Roule les dés et calcule les critiques"
+authors "Doigt"
+copyright "Copyright © 2025, Doigt"
+license "MIT"
