@@ -1,6 +1,8 @@
 import std.stdio,
+       std.algorithm,
        std.random,
-       std.conv;
+       std.conv,
+       dasfor;
 
 enum Flags
 {
@@ -10,14 +12,14 @@ enum Flags
     honour
 }
 
-auto r = Random(unpredictableSeed);
+Random r;
 
 enum minimumDieValue  = 1;
 enum d20SuperiorCrits = [18, 19, 20];
 enum d20InferiorCrits = [1, 2, 3];
 enum d6SuperiorCrits  = [5, 6];
 enum d6InferiorCrits  = [1, 2];
-enum roll(int die) = uniform(minimumDieValue, die + 1, r);
+auto roll(int die) { return uniform(minimumDieValue, die + 1, r); }
 
 void printError()
 {
@@ -27,6 +29,8 @@ void printError()
 
 void main(string[] args)
 {
+    r = Random(unpredictableSeed);
+
     if (args.length < 3)
     {
         printError;
@@ -60,7 +64,7 @@ void main(string[] args)
 
     final switch (flag)
     {
-        case flags.none:
+        case Flags.none:
 
             if (dieType != 6 && dieType != 20)
             {
@@ -70,7 +74,7 @@ void main(string[] args)
 
             for (int i; i < dieQuantity; ++i)
             {
-                auto result = roll!dieType;
+                auto result = dieType.roll;
 
                 if (result == dieType - 1)
                     hasMinUpperBound = true;
@@ -99,6 +103,43 @@ void main(string[] args)
                 total += result;
             }
 
+            if (hasMinLowerBound) "Dés inférieurs: $0/$1".daswriteln(inferiorCrits, dieQuantity);
+            else if (hasMinUpperBound) "Dés supérieurs: $0/$1".daswriteln(superiorCrits, dieQuantity);
 
+            daswriteln
+            (
+                "Le résultat est un jet $0 de $1",
+                inferiorCrits / dieQuantity * 100 < 50 ?
+                superiorCrits / dieQuantity * 100 < 50 ?
+                "normal" :
+                "critique supérieur" :
+                "critique inférieur",
+                total
+            );
+            break;
+
+        case Flags.luck:
+
+            total = 12.roll;
+            bool isLucky;
+
+            if (dieType < 0) isLucky = total > dieType * -1;
+            else isLucky = total < dieType;
+            writeln(isLucky ? "Le joueur est chanceux" : "Le joueur est malchanceux");
+            break;
+
+        case Flags.honour:
+
+            total = dieType.roll;
+            writeln(total < dieType ? "Le joueur demeure honorable" : "Le joueur est déshonoré");
+            break;
+
+        case Flags.damage:
+
+            for (int i; i < dieQuantity; ++i)
+                total += dieType.roll;
+
+            "Le résultat du jet de dés est $0".daswriteln(total);
+            break;
     }
 }
