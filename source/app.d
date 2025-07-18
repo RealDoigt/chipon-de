@@ -15,8 +15,10 @@ enum Flags
 Random r;
 
 enum minimumDieValue  = 1;
-enum d20SuperiorCrits = [18, 19, 20];
-enum d20InferiorCrits = [1, 2, 3];
+enum d20SuperiorCrits = [16, 17, 18, 19, 20];
+enum d20InferiorCrits = [1, 2, 3, 4, 5];
+enum d12SuperiorCrits = [10, 11, 12];
+enum d12InferiorCrits = [1, 2, 3];
 enum d6SuperiorCrits  = [5, 6];
 enum d6InferiorCrits  = [1, 2];
 auto roll(int die) { return uniform(minimumDieValue, die + 1, r); }
@@ -66,7 +68,7 @@ void main(string[] args)
     {
         case Flags.none:
 
-            if (dieType != 6 && dieType != 20)
+            if (dieType != 6 && dieType != 12 && dieType != 20)
             {
                 "Erreur: type de dé invalide pour un test d'attribut. Les dés valides sont 6 et 20.".writeln;
                 return;
@@ -82,22 +84,31 @@ void main(string[] args)
                 if (result == minimumDieValue)
                     hasMinLowerBound = true;
 
-                if (dieType == 6)
+                final switch (dieType)
                 {
-                    if (d6InferiorCrits.canFind(result))
-                        ++inferiorCrits;
+                    case 6:
+                        if (d6InferiorCrits.canFind(result))
+                            ++inferiorCrits;
 
-                    if (d6SuperiorCrits.canFind(result))
-                        ++superiorCrits;
-                }
+                        if (d6SuperiorCrits.canFind(result))
+                            ++superiorCrits;
+                        break;
 
-                else
-                {
-                    if (d20InferiorCrits.canFind(result))
-                        ++inferiorCrits;
+                    case 12:
+                        if (d12InferiorCrits.canFind(result))
+                            ++inferiorCrits;
 
-                    if (d20SuperiorCrits.canFind(result))
-                        ++superiorCrits;
+                        if (d12SuperiorCrits.canFind(result))
+                            ++superiorCrits;
+                        break;
+
+                    case 20:
+                        if (d20InferiorCrits.canFind(result))
+                            ++inferiorCrits;
+
+                        if (d20SuperiorCrits.canFind(result))
+                            ++superiorCrits;
+                        break;
                 }
 
                 total += result;
